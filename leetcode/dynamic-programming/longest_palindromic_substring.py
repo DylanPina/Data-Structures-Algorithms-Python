@@ -11,7 +11,3 @@ class Solution:
                     r += 1
 
         return res
-
-
-sol = Solution()
-print(sol.longestPalindrome("babad"))
