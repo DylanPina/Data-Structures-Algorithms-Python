@@ -3,10 +3,17 @@ from typing import List
 
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
-        cur_max = cur_min = nums[0]
+        res = max(nums)
+        curMin, curMax = 1, 1
 
-        for i in range(1, len(nums)):
-            temp = cur_max * nums[i]
-            cur_max = max(temp, nums[i], , )
-            cur_min = min(temp, nums[i], cur_min, )
-        return cur_max
+        for n in nums:
+            tmp = curMax * n
+            curMax = max(n * curMax, n * curMin, n)
+            curMin = min(tmp, n * curMin, n)
+            res = max(res, curMax)
+        return res
+
+
+sol = Solution()
+print(sol.maxProduct([2, 3, -2, 4]))
+print(sol.maxProduct([-2, 0, -1]))
