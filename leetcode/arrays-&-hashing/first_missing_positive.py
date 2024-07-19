@@ -2,11 +2,20 @@ from typing import List
 
 
 class Solution:
-    def firstMissingPositive(self, nums: List[int]) -> int:
-        numsSet = set(nums)
-        numsRange = [i for i in range(1, len(nums) + 1)]
+    def firstMissingPositive(self, A: List[int]) -> int:
+        for i in range(len(A)):
+            if A[i] < 0:
+                A[i] = 0
 
-        for num in numsRange:
-            if num not in numsSet:
-                return num
-        return len(nums) + 1
+        for i in range(len(A)):
+            val = abs(A[i])
+            if 1 <= val <= len(A):
+                if A[val - 1] > 0:
+                    A[val - 1] *= -1
+                elif A[val - 1] == 0:
+                    A[val - 1] = -1 * (len(A) + 1)
+
+        for i in range(1, len(A) + 1):
+            if A[i - 1] >= 0:
+                return i
+        return len(A) + 1
