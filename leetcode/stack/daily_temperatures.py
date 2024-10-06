@@ -1,14 +1,14 @@
-from typing import List
+from typing import List, Tuple
+
 
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
-            res = [0] * len(temperatures)
-            stack = []       
+        stack: List[Tuple[int, int]] = []
+        res: List[int] = [0] * len(temperatures)
 
-            for i, t in enumerate(temperatures):
-                while stack and t > stack[-1][0]:
-                    stack_temperature, stack_index = stack.pop()
-                    res[stack_index] = i - stack_index
-                stack.append((t, i))
-
-            return res
+        for i, t in enumerate(temperatures):
+            while stack and t > stack[-1][0]:
+                _, i_prev = stack.pop()
+                res[i_prev] = i - i_prev
+            stack.append((t, i))
+        return res
