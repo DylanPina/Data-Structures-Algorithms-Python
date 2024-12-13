@@ -1,3 +1,6 @@
+from typing import Optional, List
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -8,12 +11,13 @@ class TreeNode:
 class Solution:
     def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
         res = []
-        self.dfs(root, res)
-        return res
 
-    def dfs(self, root: Optional[TreeNode], res: List[int]) -> None:
-        if not root:
-            return
-        self.dfs(root.left, res)
-        res.append(root.val)
-        self.dfs(root.right, res)
+        def dfs(node: Optional[TreeNode]) -> None:
+            if not node:
+                return
+            dfs(node.left)
+            res.append(node.val)
+            dfs(node.right)
+
+        dfs(root)
+        return res
