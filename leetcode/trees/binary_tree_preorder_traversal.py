@@ -11,15 +11,15 @@ class TreeNode:
 
 class Solution:
     def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        res, stack = [], [root]
-        cur = root
+        res = []
 
-        while cur or stack:
-            if cur:
-                res.append(cur.val)
-                if cur.right:
-                    stack.append(cur.right)
-                cur = cur.left
-            else:
-                cur = stack.pop()
+        def dfs(node: Optional[TreeNode]) -> None:
+            if not node:
+                return
+
+            res.append(node.val)
+            dfs(node.left)
+            dfs(node.right)
+
+        dfs(root)
         return res
