@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -7,17 +10,15 @@ class TreeNode:
 
 class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
-        res = [0]
+        res = 0
 
-        def dfs(root):
-            if not root:
-                return -1
-            left = dfs(root.left)
-            right = dfs(root.right)
-            res[0] = max(res[0], 2 + left + right)
-            print(res[0])
-            print(1 + max(left, right))
+        def dfs(node: Optional[TreeNode]) -> int:
+            nonlocal res
+            if not node:
+                return 0
+            left, right = dfs(node.left), dfs(node.right)
+            res = max(res, left + right)
             return 1 + max(left, right)
-        
+
         dfs(root)
-        return res[0]
+        return res
