@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -10,9 +13,9 @@ class Solution:
         if not root:
             return TreeNode(val)
 
-        if val > root.val:
-            root.right = self.insertIntoBST(root.right, val)
-        elif val < root.val:
+        if root.val > val:
             root.left = self.insertIntoBST(root.left, val)
+        else:
+            root.right = self.insertIntoBST(root.right, val)
+
         return root
-        
