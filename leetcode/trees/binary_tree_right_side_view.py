@@ -1,5 +1,5 @@
 from collections import deque
-from typing import List
+from typing import List, Optional
 
 
 class TreeNode:
@@ -10,7 +10,7 @@ class TreeNode:
 
 
 class Solution:
-    def rightSideView(self, root: TreeNode) -> List[int]:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         res = []
         q = deque([root])
 
@@ -24,7 +24,8 @@ class Solution:
                     rightSide = node
                     q.append(node.left)
                     q.append(node.right)
+
             if rightSide:
                 res.append(rightSide.val)
+
         return res
-                
