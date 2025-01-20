@@ -4,28 +4,29 @@ from typing import List
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        visited = set()
-        prereqs = defaultdict(list)
+        prereqMap = defaultdict(list)
+        for src, dst in prerequisites:
+            prereqMap[src].append(dst)
 
-        for course, prereq in prerequisites:
-            prereqs[course].append(prereq)
+        visiting = set()
 
         def dfs(cur: int) -> bool:
-            if cur in visited:
+            if cur in visiting:
                 return False
-            if not prereqs[cur]:
+
+            if cur not in prereqMap:
                 return True
 
-            visited.add(cur)
-            for p in prereqs[cur]:
-                if not dfs(p):
+            visiting.add(cur)
+            for preq in prereqMap[cur]:
+                if not dfs(preq):
                     return False
 
-            visited.remove(cur)
-            prereqs[cur] = []
+            visiting.remove(cur)
+            del prereqMap[cur]
             return True
 
-        for c in range(numCourses):
-            if not dfs(c):
+        for course in range(numCourses):
+            if not dfs(course):
                 return False
         return True
