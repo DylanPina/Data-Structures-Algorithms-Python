@@ -3,32 +3,33 @@ from typing import List
 
 class Solution:
     def solve(self, board: List[List[str]]) -> None:
-        ROWS, COLS = len(board), len(board[0])
+        M, N = len(board), len(board[0])
+        visited = set()
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
-        def dfs(r: int, c: int) -> None:
-            if (
-                not r in range(ROWS) or
-                not c in range(COLS) or
-                board[r][c] == "X" or
-                board[r][c] == "T"
-            ):
-                return
+        def dfs(r: int, c: int, region: set) -> bool:
+            region.add((r, c))
+            visited.add((r, c))
 
-            board[r][c] = "T"
-            for dr, dc in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
-                dfs(r + dr, c + dc)
+            surrounded = True
+            for dr, dc in directions:
+                nr, nc = dr + r, dc + c
 
-        for i in range(ROWS):
-            dfs(i, 0)
-            dfs(i, COLS - 1)
-        for i in range(COLS):
-            dfs(0, i)
-            dfs(ROWS - 1, i)
-        
-        for r in range(ROWS):
-            for c in range(COLS):
-                if board[r][c] == "O":
-                    board[r][c] = "X"
-                elif board[r][c] == "T":
-                    board[r][c] = "O"
-        
+                if min(nr, nc) < 0 or nr == M or nc == N:
+                    return False
+
+                if (nr, nc) not in region and board[nr][nc] == "O":
+                    surrounded &= dfs(nr, nc, region)
+
+            return surrounded
+
+        def changeSurroundedRegion(region: set) -> None:
+            for r, c in region:
+                board[r][c] = "X"
+
+        for r in range(M):
+            for c in range(N):
+                if (r, c) not in visited and board[r][c] == "O":
+                    region = set()
+                    if dfs(r, c, region):
+                        changeSurroundedRegion(region)
