@@ -1,30 +1,30 @@
 from typing import List
-from collections import defaultdict
 
 
 class Solution:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        if len(edges) > n - 1:
+            return False
 
-    def valid_tree(self, n: int, edges: List[List[int]]) -> bool:
-        if not n:
-            return True
+        adj = {node: [] for node in range(n)}
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
 
-        adj = defaultdict(list)
         visited = set()
 
-        for v1, v2 in edges:
-            adj[v1].append(v2)
-            adj[v2].append(v1)
-
-        def dfs(cur: int, prev: int) -> bool:
-            if cur in visited:
+        def dfs(node: int, parent: int) -> bool:
+            if node in visited:
                 return False
 
-            visited.add(cur)
-            for nei in visited:
-                if nei == prev:
+            visited.add(node)
+
+            for nei in adj[node]:
+                if nei == parent:
                     continue
-                if not dfs(nei, cur):
+                if not dfs(nei, node):
                     return False
+
             return True
 
-        return dfs(0, -1) and len(set) == n
+        return dfs(0, -1) and len(visited) == n
