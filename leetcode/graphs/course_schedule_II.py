@@ -1,32 +1,37 @@
-from collections import defaultdict
 from typing import List
 
 
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        prereqs = defaultdict(list)
-        path, visited = set(), set()
-        res = []
+        if not len(prerequisites):
+            return list(range(numCourses))
 
+        prereqMap = {course: [] for course in range(numCourses)}
         for course, prereq in prerequisites:
-            prereqs[course].append(prereq)
+            prereqMap[course].append(prereq)
 
-        def dfs(curr: int) -> bool:
-            if curr in path:
+        output = []
+        visited, visiting = set(), set()
+
+        def dfs(course: int) -> bool:
+            if course in visiting:
                 return False
-            if curr in visited:
+            if course in visited:
                 return True
 
-            path.add(curr)
-            for prereq in prereqs[curr]:
+            visiting.add(course)
+            for prereq in prereqMap[course]:
                 if not dfs(prereq):
                     return False
-            path.remove(curr)
-            visited.add(curr)
-            res.append(curr)
+
+            visiting.remove(course)
+            visited.add(course)
+            output.append(course)
+
             return True
 
-        for c in range(numCourses):
-            if not dfs(c):
+        for course in range(numCourses):
+            if not dfs(course):
                 return []
-        return res
+
+        return output
