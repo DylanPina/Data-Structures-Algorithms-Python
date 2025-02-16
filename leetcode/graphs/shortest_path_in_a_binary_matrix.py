@@ -3,44 +3,49 @@ from typing import List
 
 
 class Solution:
-    def shortestPathBinaryMatrix(self, g: List[List[int]]) -> int:
-        if g[0][0] == 1:
+    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
+        if grid[0][0]:
             return -1
 
-        M, N = len(g), len(g[0])
-        neighbors = [
+        ROWS, COLS = len(grid), len(grid[0])
+        if (ROWS - 1, COLS - 1) == (0, 0):
+            return 1
+
+        directions = [
             (1, 0),
+            (0, 1),
+            (-1, 0),
+            (0, -1),
             (1, 1),
             (-1, -1),
-            (-1, 0),
-            (0, 1),
-            (0, -1),
-            (1, -1),
             (-1, 1),
+            (1, -1),
         ]
-        visited = set([(0, 0)])
+
         q = deque([(0, 0)])
-        length = 1
+        visited = set()
+        distance = 1
 
         while q:
             for _ in range(len(q)):
                 r, c = q.popleft()
 
-                if r == M - 1 and c == N - 1:
-                    return length
-
-                for dr, dc in neighbors:
+                for dr, dc in directions:
                     nr, nc = r + dr, c + dc
-
                     if (
-                        0 <= nr < M
-                        and 0 <= nc < N
-                        and not g[nr][nc]
-                        and (nr, nc) not in visited
+                        min(nr, nc) < 0
+                        or nr >= ROWS
+                        or nc >= COLS
+                        or (nr, nc) in visited
+                        or grid[nr][nc] != 0
                     ):
-                        q.append((nr, nc))
-                        visited.add((nr, nc))
+                        continue
 
-            length += 1
+                    if (nr, nc) == (ROWS - 1, COLS - 1):
+                        return distance + 1
+
+                    q.append((nr, nc))
+                    visited.add((nr, nc))
+            distance += 1
 
         return -1
