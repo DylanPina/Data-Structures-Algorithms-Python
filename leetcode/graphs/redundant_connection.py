@@ -3,32 +3,33 @@ from typing import List
 
 class Solution:
     def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
-        self.parent = {i: i for i in range(1, len(edges) + 1)}
-        self.rank = {i: 0 for i in range(1, len(edges) + 1)}
+        parent = {i: i for i in range(len(edges) + 1)}
+        rank = {i: 0 for i in range(len(edges) + 1)}
 
-        def findParent(x: int) -> int:
-            if not self.parent[x] == x:
-                return findParent(self.parent[self.parent[x]])
-            return x
+        for node in parent.keys():
+            rank[node] = 1
 
-        def union(x1: int, x2: int) -> bool:
-            x1, x2 = findParent(x1), findParent(x2)
+        def find(x: int) -> int:
+            if x != parent[x]:
+                parent[x] = find(parent[x])
+            return parent[x]
 
-            if x1 == x2:
+        def union(x: int, y: int) -> bool:
+            if (x := find(x)) == (y := find(y)):
                 return False
 
-            if self.rank[x1] > self.rank[x2]:
-                self.parent[x2] = x1
-            elif self.rank[x1] < self.rank[x2]:
-                self.parent[x1] = x2
+            if rank[x] > rank[y]:
+                parent[y] = x
+            elif rank[y] > rank[x]:
+                parent[x] = y
             else:
-                self.parent[x2] = x1
-                self.rank[x1] -= 1
+                parent[y] = x
+                rank[x] += 1
 
             return True
 
-        for x1, x2 in edges:
-            if not union(x1, x2):
-                return [x1, x2]
+        for u, v in edges:
+            if not union(u, v):
+                return [u, v]
 
-        return [-1, -1]
+        return []
