@@ -6,8 +6,8 @@ class Solution:
         if not digits:
             return []
 
-        res, combination = [], []
-        digit_map = {
+        res = []
+        digits_map = {
             "2": "abc",
             "3": "def",
             "4": "ghi",
@@ -18,15 +18,15 @@ class Solution:
             "9": "wxyz",
         }
 
-        def dfs(i: int) -> None:
-            if len(combination) == len(digits):
-                res.append("".join(combination))
+        def backtrack(i: int, cur: List[str]) -> None:
+            if i == len(digits):
+                res.append("".join(cur))
                 return
 
-            for c in list(digit_map[digits[i]]):
-                combination.append(c)
-                dfs(i + 1)
-                combination.pop()
+            for c in digits_map[digits[i]]:
+                cur.append(c)
+                backtrack(i + 1, cur)
+                cur.pop()
 
-        dfs(0)
+        backtrack(0, [])
         return res
