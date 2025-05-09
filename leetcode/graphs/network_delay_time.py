@@ -1,26 +1,32 @@
+import heapq
 from collections import defaultdict
-from heapq import heappop, heappush
 from typing import List
 
 
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         adj = defaultdict(list)
-        for u, v, w in times:
-            adj[u].append((v, w))
+        for u, v, t in times:
+            adj[u].append((v, t))
 
-        shortest = {}
-        minHeap = [(0, k)]
+        res = 0
+        pq = [(0, k)]  # time, vertex
+        visited = set()
 
-        while minHeap:
-            for _ in range(len(minHeap)):
-                w1, n1 = heappop(minHeap)
-                if n1 in shortest:
+        while pq:
+            for _ in range(len(pq)):
+                t1, u = heapq.heappop(pq)
+                if u in visited:
                     continue
-                shortest[n1] = w1
 
-                for n2, w2 in adj[n1]:
-                    if n2 not in shortest:
-                        heappush(minHeap, (w1 + w2, n2))
+                res = t1
 
-        return max(shortest.values()) if len(shortest) == n else -1
+                visited.add(u)
+                if len(visited) == n:
+                    return res
+
+                for v, t2 in adj[u]:
+                    if v not in visited:
+                        heapq.heappush(pq, (t1 + t2, v))
+
+        return -1
