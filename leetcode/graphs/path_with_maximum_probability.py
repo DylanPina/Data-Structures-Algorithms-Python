@@ -1,5 +1,5 @@
+import heapq
 from collections import defaultdict
-from heapq import heappop, heappush
 from typing import List
 
 
@@ -9,28 +9,27 @@ class Solution:
         n: int,
         edges: List[List[int]],
         succProb: List[float],
-        start: int,
-        end: int,
+        start_node: int,
+        end_node: int,
     ) -> float:
         adj = defaultdict(list)
-        for [u, v], w in zip(edges, succProb):
-            adj[u].append((v, w))
-            adj[v].append((u, w))
+        for (n1, n2), p in zip(edges, succProb):
+            adj[n1].append((n2, p))
+            adj[n2].append((n1, p))
 
-        shortest = {}
-        maxHeap = [(1, start)]
+        pq = [(-1, start_node)]
+        visit = set()
 
-        while maxHeap:
-            for _ in range(len(maxHeap)):
-                w1, n1 = heappop(maxHeap)
+        while pq:
+            for _ in range(len(pq)):
+                p1, n1 = heapq.heappop(pq)
 
-                if n1 in shortest:
-                    continue
-                if n1 == end:
-                    return abs(w1)
+                if n1 == end_node:
+                    return -p1
 
-                shortest[n1] = w1
-                for n2, w2 in adj[n1]:
-                    if not n2 in shortest:
-                        heappush(maxHeap, (-abs(w1 * w2), n2))
+                visit.add(n1)
+
+                for n2, p2 in adj[n1]:
+                    if n2 not in visit:
+                        heapq.heappush(pq, (p1 * p2, n2))
         return 0.0
