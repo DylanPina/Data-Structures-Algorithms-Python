@@ -1,19 +1,21 @@
 from typing import List
 
-    
+
 class Solution:
     def findCheapestPrice(
         self, n: int, flights: List[List[int]], src: int, dst: int, k: int
     ) -> int:
-        prices = { i: float("inf") for i in range(n) }
+        prices = [float("inf")] * n
         prices[src] = 0
 
-        for i in range(k + 1):
-            temp_prices = prices.copy()
-            for u, v, p in flights:
-                if prices[u] == float("inf"):
+        for _ in range(k + 1):
+            tmp_prices = prices.copy()
+
+            for s, d, p in flights:
+                if prices[s] == float("inf"):
                     continue
-                if prices[u] + p < temp_prices[v]:
-                    temp_prices[v] = prices[u] + p
-            prices = temp_prices
+                if (new_price := prices[s] + p) < tmp_prices[d]:
+                    tmp_prices[d] = new_price
+            prices = tmp_prices
+
         return -1 if prices[dst] == float("inf") else prices[dst]
